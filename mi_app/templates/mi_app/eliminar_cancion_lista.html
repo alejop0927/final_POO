@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <meta charset="UTF-8">
+    <title>Canciones de {{ lista.nombre_lista }}</title>
+</head>
+<body>
+    <h1>Canciones en la lista: {{ lista.nombre_lista }}</h1>
+    
+    <ul>
+        {% for prelista in canciones %}
+            <li>
+                {{ prelista.catalogo.cancion.nombre_cancion }} - {{ prelista.catalogo.cancion.nombre_autor }}
+                <form action="{% url 'eliminar_cancion_lista' prelista.id_prelista %}" method="POST" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Eliminar</button>
+                </form>
+            </li>
+        {% empty %}
+            <li>No hay canciones en esta lista.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'lista_de_playlist' %}">Volver a las listas</a>
+</body>
+</html>

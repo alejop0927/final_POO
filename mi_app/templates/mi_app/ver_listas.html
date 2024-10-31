@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Listas de Playlist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Agregar Font Awesome -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background-color: #fff;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+            margin-right: 10px;
+        }
+        button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .ver-canciones {
+            background-color: #28a745;
+            color: white;
+        }
+        .agregar-cancion {
+            background-color: #007bff;
+            color: white;
+        }
+        .eliminar {
+            background-color: #dc3545;
+            color: white;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        .home-link {
+            display: inline-block; /* Para que esté en la misma línea */
+            margin-bottom: 20px; /* Espacio debajo del enlace */
+        }
+        .home-link button {
+            background-color: #007bff; /* Color del botón */
+            color: white;
+            padding: 8px 12px; /* Espaciado del botón */
+            border: none; /* Sin borde */
+            border-radius: 4px; /* Bordes redondeados */
+            cursor: pointer; /* Cambia el cursor al pasar por encima */
+        }
+        .home-link button:hover {
+            background-color: #0056b3; /* Color al pasar el ratón */
+        }
+    </style>
+</head>
+<body>
+    <h1>Listas de Playlist</h1>
+
+    <!-- Enlace a la página del catálogo -->
+    <div class="home-link">
+        <a href="{% url 'ver_catalogo' %}">
+            <button>
+                <i class="fas fa-home"></i> Volver al Catálogo
+            </button>
+        </a>
+    </div>
+
+    <ul>
+        {% for lista in listas %}
+            <li>
+                <span>{{ lista.nombre_lista }}</span>
+                <div>
+                    <a href="{% url 'ver_canciones_lista' lista.id_lista %}">
+                        <button class="ver-canciones">Ver Canciones</button>
+                    </a>
+                    <a href="{% url 'set_agregar_cancion_lista' lista.id_lista %}">
+                        <button class="agregar-cancion">Agregar Canción</button>
+                    </a>
+                    <form action="{% url 'set_eliminar_lista' lista.id_lista %}" method="POST" style="display:inline;">
+                        {% csrf_token %}
+                        <button class="eliminar" type="submit">Eliminar</button>
+                    </form>
+                </div>
+            </li>
+        {% empty %}
+            <li>No hay listas de playlists disponibles.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'crear_lista_playlist' %}">
+        <button class="agregar-cancion">Crear Nueva Lista</button>
+    </a>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Agregado para responsive -->
+    <title>Agregar Canción a {{ lista.nombre_lista }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        form {
+            max-width: 400px; /* Limita el ancho del formulario */
+            margin: 0 auto; /* Centra el formulario */
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block; /* Hace que la etiqueta ocupe su propia línea */
+            margin-bottom: 10px;
+            color: #555; /* Color gris para las etiquetas */
+        }
+        select {
+            width: 100%; /* Hace que el select ocupe todo el ancho */
+            padding: 10px;
+            margin: 10px 0; /* Espacio entre el campo y el botón */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%; /* Botón ocupa todo el ancho */
+            padding: 10px;
+            background-color: #007bff; /* Color azul */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3; /* Color azul más oscuro al pasar el ratón */
+        }
+        a {
+            display: block; /* Para que el enlace esté en su propia línea */
+            margin-top: 15px;
+            text-align: center;
+            color: #007bff; /* Color azul */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline; /* Subraya el enlace al pasar el ratón */
+        }
+        ul {
+            list-style-type: none; /* Elimina los puntos de la lista */
+            padding: 0; /* Elimina el padding de la lista */
+            margin: 20px auto; /* Centra la lista de mensajes */
+            max-width: 400px; /* Limita el ancho de la lista de mensajes */
+        }
+        li {
+            background-color: #d4edda; /* Color de fondo para mensajes */
+            color: #155724; /* Color de texto para mensajes */
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px; /* Espacio entre mensajes */
+        }
+    </style>
+</head>
+<body>
+    <h1>Agregar Canción a {{ lista.nombre_lista }}</h1>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <label for="cancion">Selecciona una canción:</label>
+        <select name="cancion_id" id="cancion">
+            {% for item in catalogo %}
+                <option value="{{ item.id_catalogo }}">
+                    {{ item.cancion.nombre_cancion }} - {{ item.cancion.nombre_autor }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">Agregar Canción</button>
+    </form>
+
+    <a href="{% url 'lista_de_playlist' %}">Volver a las listas</a>
+
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,86 @@
+/* body_catalogo styles */
+#body_catalogo {
+    background-color: rgb(250, 249, 249);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    position: relative; /* Added this */
+}
+
+/* Estilos para el título */
+#titulo_catalogo {
+    text-align: center;
+    color: rgb(223, 31, 37);
+    margin: 20px 0;
+    font-size: 2.5em;
+    font-weight: bold;
+}
+
+/* Estilos para la tabla de canciones */
+table {
+    width: 100%;
+    border-collapse: collapse; /* Elimina el espacio entre bordes */
+}
+
+.cancion-item {
+    padding: 10px;
+}
+
+.cancion-item img {
+    border-radius: 10px; /* Bordes redondeados para las imágenes */
+    transition: transform 0.3s; /* Efecto de transición */
+}
+
+.cancion-item img:hover {
+    transform: scale(1.05); /* Efecto de zoom al pasar el mouse */
+}
+
+/* Popup styles */
+.popup-container {
+    position: fixed; /* Fija el popup en la pantalla */
+    top: 0;
+    left: 0;
+    width: 100%; /* Ocupa todo el ancho de la pantalla */
+    height: 100%; /* Ocupa toda la altura de la pantalla */
+    display: flex; /* Utiliza flexbox para centrar el contenido */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    background: rgba(0, 0, 0, 0.8); /* Fondo oscuro y semitransparente */
+    z-index: 1000; /* Asegura que el popup esté por encima de otros elementos */
+    display: none; /* Oculta el popup por defecto */
+}
+
+.popup {
+    background: white; /* Fondo blanco para el contenido del popup */
+    padding: 20px; /* Espaciado interno */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Sombra para dar profundidad */
+    max-width: 500px; /* Ancho máximo del popup */
+    width: 90%; /* Ancho del popup */
+}
+
+.popup-close {
+    background: none; /* Sin fondo */
+    border: none; /* Sin borde */
+    font-size: 30px; /* Tamaño de la fuente */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    position: absolute; /* Posiciona el botón de cierre */
+    top: 10px; /* Espaciado desde la parte superior */
+    right: 10px; /* Espaciado desde la derecha */
+}
+
+/* Estilos para los enlaces en el popup */
+.popup-content a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #4caf50; /* Color de fondo */
+    color: white; /* Color del texto */
+    text-decoration: none; /* Sin subrayado */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: background-color 0.3s; /* Transición suave */
+}
+
+.popup-content a:hover {
+    background-color: #45a049; /* Color al pasar el mouse */
+}

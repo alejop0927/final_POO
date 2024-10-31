@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Agregado para responsive -->
+    <title>Canciones en la Lista</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #lista-canciones {
+            list-style-type: none; /* Elimina los puntos de la lista */
+            padding: 0; /* Elimina el padding de la lista */
+            max-width: 600px; /* Limita el ancho de la lista */
+            margin: 0 auto; /* Centra la lista */
+            background-color: #fff; /* Fondo blanco */
+            border-radius: 5px; /* Bordes redondeados */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+            padding: 20px; /* Espaciado interno */
+        }
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #eee; /* Línea separadora */
+            display: flex; /* Flex para alinear elementos */
+            justify-content: space-between; /* Espacio entre elementos */
+            align-items: center; /* Centra verticalmente */
+        }
+        li:last-child {
+            border-bottom: none; /* Elimina la línea en el último elemento */
+        }
+        a {
+            color: #dc3545; /* Color rojo para eliminar */
+            text-decoration: none; /* Elimina el subrayado */
+            transition: color 0.3s; /* Transición de color */
+        }
+        a:hover {
+            color: #c82333; /* Color rojo más oscuro al pasar el ratón */
+        }
+        #reproductor {
+            text-align: center; /* Centra el reproductor */
+            margin-top: 20px; /* Margen superior */
+            background-color: #fff; /* Fondo blanco */
+            padding: 20px; /* Espaciado interno */
+            border-radius: 5px; /* Bordes redondeados */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+        }
+        button {
+            background-color: #007bff; /* Color azul */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s; /* Transición de color */
+        }
+        button:hover {
+            background-color: #0056b3; /* Color azul más oscuro al pasar el ratón */
+        }
+        a.back-link {
+            display: block; /* Para que el enlace esté en su propia línea */
+            margin-top: 15px;
+            text-align: center;
+            color: #007bff; /* Color azul */
+            text-decoration: none;
+            transition: color 0.3s; /* Transición de color */
+        }
+        a.back-link:hover {
+            text-decoration: underline; /* Subraya el enlace al pasar el ratón */
+        }
+    </style>
+</head>
+<body>
+    <h1>Canciones en la lista "{{ lista.nombre_lista }}"</h1>
+    <ul id="lista-canciones">
+        {% for prelista in lista.prelistas.all %}
+            <li data-audio-url="{{ prelista.catalogo.cancion.audio.url }}">
+                {{ prelista.catalogo.cancion.nombre_cancion }} 
+                <a href="{% url 'eliminar_cancion_lista' prelista.id_prelista %}" onclick="return confirm('¿Estás seguro de que deseas eliminar esta canción?');">Eliminar</a>
+            </li>
+        {% empty %}
+            <li>No hay canciones en esta lista.</li>
+        {% endfor %}
+    </ul>
+
+    <div id="reproductor">
+        <audio id="audio" controls>
+            <source id="audio-source" src="" type="audio/mpeg">
+            Tu navegador no soporta el elemento de audio.
+        </audio>
+        <div>
+            <button onclick="playPrevious()">Anterior</button>
+            <button onclick="playNext()">Siguiente</button>
+        </div>
+    </div>
+
+    <a href="{% url 'lista_de_playlist' %}" class="back-link">Volver a las listas de reproducción</a>
+
+    <script>
+        let currentSongIndex = -1; // Índice de la canción actual
+        const songs = []; // Arreglo para almacenar las URLs de audio
+
+        // Recopila todas las canciones en el DOM
+        const songItems = document.querySelectorAll('#lista-canciones li');
+        songItems.forEach((item, index) => {
+            songs.push(item.dataset.audioUrl); // Almacena la URL de cada canción
+        });
+
+        // Función para cargar y reproducir la canción actual
+        function loadAndPlaySong(index) {
+            if (index >= 0 && index < songs.length) {
+                currentSongIndex = index;
+                const audio = document.getElementById('audio');
+                const source = document.getElementById('audio-source');
+                source.src = songs[currentSongIndex];
+                audio.load(); // Carga la nueva fuente
+                audio.play(); // Reproduce la canción
+            }
+        }
+
+        // Función para reproducir la canción anterior
+        function playPrevious() {
+            if (currentSongIndex > 0) {
+                loadAndPlaySong(currentSongIndex - 1);
+            } else {
+                alert("No hay canción anterior.");
+            }
+        }
+
+        // Función para reproducir la siguiente canción
+        function playNext() {
+            if (currentSongIndex < songs.length - 1) {
+                loadAndPlaySong(currentSongIndex + 1);
+            } else {
+                alert("No hay siguiente canción.");
+            }
+        }
+
+        // Cargar la primera canción si hay canciones
+        if (songs.length > 0) {
+            loadAndPlaySong(0);
+        }
+    </script>
+</body>
+</html>

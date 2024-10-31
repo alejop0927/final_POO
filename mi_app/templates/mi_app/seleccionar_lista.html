@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seleccionar Lista</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <h1>Agregar Canción a la Lista</h1>
+    <h2>{{ cancion.cancion.nombre_cancion }}</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <select name="lista_id" required>
+            <option value="">Seleccione una lista...</option>
+            {% for lista in listas %}
+                <option value="{{ lista.id_lista }}">{{ lista.nombre_lista }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Agregar Canción</button>
+    </form>
+
+    <a href="{% url 'ver_catalogo' %}">Regresar al Catálogo</a>
+</body>
+</html>

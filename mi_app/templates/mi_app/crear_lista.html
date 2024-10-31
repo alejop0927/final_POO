@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Agregado para responsive -->
+    <title>Crear Lista Playlist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        form {
+            max-width: 400px; /* Limita el ancho del formulario */
+            margin: 0 auto; /* Centra el formulario */
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        form input {
+            width: 100%; /* Hace que los campos ocupen todo el ancho */
+            padding: 10px;
+            margin: 10px 0; /* Espacio entre los campos */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%; /* Botón ocupa todo el ancho */
+            padding: 10px;
+            background-color: #28a745; /* Color verde */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #218838; /* Color verde más oscuro al pasar el ratón */
+        }
+        a {
+            display: block; /* Para que el enlace esté en su propia línea */
+            margin-top: 15px;
+            text-align: center;
+            color: #007bff; /* Color azul */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline; /* Subraya el enlace al pasar el ratón */
+        }
+    </style>
+</head>
+<body>
+    <h1>Crear Playlist</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- Renderiza el formulario -->
+        <button type="submit">Crear Playlist</button>
+    </form>
+    <a href="{% url 'lista_de_playlist' %}">Volver a las listas</a>
+</body>
+</html>
