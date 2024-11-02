@@ -4,7 +4,7 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Agregado para responsive -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Canciones en la Lista</title>
     <style>
         body {
@@ -18,63 +18,63 @@
             margin-bottom: 20px;
         }
         #lista-canciones {
-            list-style-type: none; /* Elimina los puntos de la lista */
-            padding: 0; /* Elimina el padding de la lista */
-            max-width: 600px; /* Limita el ancho de la lista */
-            margin: 0 auto; /* Centra la lista */
-            background-color: #fff; /* Fondo blanco */
-            border-radius: 5px; /* Bordes redondeados */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
-            padding: 20px; /* Espaciado interno */
+            list-style-type: none;
+            padding: 0;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
         }
         li {
             padding: 10px;
-            border-bottom: 1px solid #eee; /* Línea separadora */
-            display: flex; /* Flex para alinear elementos */
-            justify-content: space-between; /* Espacio entre elementos */
-            align-items: center; /* Centra verticalmente */
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         li:last-child {
-            border-bottom: none; /* Elimina la línea en el último elemento */
+            border-bottom: none;
         }
         a {
-            color: #dc3545; /* Color rojo para eliminar */
-            text-decoration: none; /* Elimina el subrayado */
-            transition: color 0.3s; /* Transición de color */
+            color: #dc3545;
+            text-decoration: none;
+            transition: color 0.3s;
         }
         a:hover {
-            color: #c82333; /* Color rojo más oscuro al pasar el ratón */
+            color: #c82333;
         }
         #reproductor {
-            text-align: center; /* Centra el reproductor */
-            margin-top: 20px; /* Margen superior */
-            background-color: #fff; /* Fondo blanco */
-            padding: 20px; /* Espaciado interno */
-            border-radius: 5px; /* Bordes redondeados */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+            text-align: center;
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         button {
-            background-color: #007bff; /* Color azul */
+            background-color: #007bff;
             color: white;
             border: none;
             border-radius: 4px;
             padding: 10px 15px;
             cursor: pointer;
-            transition: background-color 0.3s; /* Transición de color */
+            transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #0056b3; /* Color azul más oscuro al pasar el ratón */
+            background-color: #0056b3;
         }
         a.back-link {
-            display: block; /* Para que el enlace esté en su propia línea */
+            display: block;
             margin-top: 15px;
             text-align: center;
-            color: #007bff; /* Color azul */
+            color: #007bff;
             text-decoration: none;
-            transition: color 0.3s; /* Transición de color */
+            transition: color 0.3s;
         }
         a.back-link:hover {
-            text-decoration: underline; /* Subraya el enlace al pasar el ratón */
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -97,56 +97,107 @@
             Tu navegador no soporta el elemento de audio.
         </audio>
         <div>
-            <button onclick="playPrevious()">Anterior</button>
-            <button onclick="playNext()">Siguiente</button>
+            <button onclick="player.playPrevious()">Anterior</button>
+            <button onclick="player.playNext()">Siguiente</button>
+            <button onclick="player.increaseVolume()">Subir Volumen</button>
+            <button onclick="player.decreaseVolume()">Bajar Volumen</button>
+            <button onclick="player.downloadCurrentSong()">Descargar Canción</button>
+            <button onclick="player.increaseSpeed()">Aumentar Velocidad</button>
+            <button onclick="player.decreaseSpeed()">Disminuir Velocidad</button>
         </div>
     </div>
 
     <a href="{% url 'lista_de_playlist' %}" class="back-link">Volver a las listas de reproducción</a>
 
     <script>
-        let currentSongIndex = -1; // Índice de la canción actual
-        const songs = []; // Arreglo para almacenar las URLs de audio
+        class Playlist {
+            constructor() {
+                this.songs = [];
+                this.currentSongIndex = -1;
+            }
 
-        // Recopila todas las canciones en el DOM
-        const songItems = document.querySelectorAll('#lista-canciones li');
-        songItems.forEach((item, index) => {
-            songs.push(item.dataset.audioUrl); // Almacena la URL de cada canción
-        });
-
-        // Función para cargar y reproducir la canción actual
-        function loadAndPlaySong(index) {
-            if (index >= 0 && index < songs.length) {
-                currentSongIndex = index;
-                const audio = document.getElementById('audio');
-                const source = document.getElementById('audio-source');
-                source.src = songs[currentSongIndex];
-                audio.load(); // Carga la nueva fuente
-                audio.play(); // Reproduce la canción
+            collectSongs() {
+                const songItems = document.querySelectorAll('#lista-canciones li');
+                songItems.forEach((item) => {
+                    this.songs.push(item.dataset.audioUrl);
+                });
             }
         }
 
-        // Función para reproducir la canción anterior
-        function playPrevious() {
-            if (currentSongIndex > 0) {
-                loadAndPlaySong(currentSongIndex - 1);
-            } else {
-                alert("No hay canción anterior.");
+        class Player {
+            constructor(playlist) {
+                this.playlist = playlist;
+                this.audio = document.getElementById('audio');
+                this.source = document.getElementById('audio-source');
+            }
+
+            loadAndPlaySong(index) {
+                if (index >= 0 && index < this.playlist.songs.length) {
+                    this.playlist.currentSongIndex = index;
+                    this.source.src = this.playlist.songs[this.playlist.currentSongIndex];
+                    this.audio.load();
+                    this.audio.play();
+                }
+            }
+
+            playPrevious() {
+                if (this.playlist.currentSongIndex > 0) {
+                    this.loadAndPlaySong(this.playlist.currentSongIndex - 1);
+                } else {
+                    this.alertNoMoreSongs("No hay canción anterior.");
+                }
+            }
+
+            playNext() {
+                if (this.playlist.currentSongIndex < this.playlist.songs.length - 1) {
+                    this.loadAndPlaySong(this.playlist.currentSongIndex + 1);
+                } else {
+                    this.alertNoMoreSongs("No hay siguiente canción.");
+                }
+            }
+
+            increaseVolume() {
+                if (this.audio.volume < 1) {
+                    this.audio.volume = Math.min(1, this.audio.volume + 0.1);
+                }
+            }
+
+            decreaseVolume() {
+                if (this.audio.volume > 0) {
+                    this.audio.volume = Math.max(0, this.audio.volume - 0.1);
+                }
+            }
+
+            downloadCurrentSong() {
+                const currentSongUrl = this.playlist.songs[this.playlist.currentSongIndex];
+                if (currentSongUrl) {
+                    const link = document.createElement('a');
+                    link.href = currentSongUrl;
+                    link.download = currentSongUrl.split('/').pop();
+                    link.click();
+                }
+            }
+
+            increaseSpeed() {
+                this.audio.playbackRate = Math.min(2, this.audio.playbackRate + 0.1);
+            }
+
+            decreaseSpeed() {
+                this.audio.playbackRate = Math.max(0.5, this.audio.playbackRate - 0.1);
+            }
+
+            alertNoMoreSongs(message) {
+                alert(message);
             }
         }
 
-        // Función para reproducir la siguiente canción
-        function playNext() {
-            if (currentSongIndex < songs.length - 1) {
-                loadAndPlaySong(currentSongIndex + 1);
-            } else {
-                alert("No hay siguiente canción.");
-            }
-        }
+        const playlist = new Playlist();
+        playlist.collectSongs();
 
-        // Cargar la primera canción si hay canciones
-        if (songs.length > 0) {
-            loadAndPlaySong(0);
+        const player = new Player(playlist);
+
+        if (playlist.songs.length > 0) {
+            player.loadAndPlaySong(0);
         }
     </script>
 </body>
